@@ -1,62 +1,86 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
+import { AuthContextType, AuthProviderProps, User } from '../types'
 
-interface AuthContextType {
-    user: [];
-    token: string | null;
-    login: (username: string, password: string) => void;
-    logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-interface AuthProviderProps {
-    children: ReactNode;
-}
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<[]>([])
+  const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('authToken')
-    if (storedToken) {
-      setToken(storedToken)
+  const fetchUserData = async (token: string): Promise<void> => {
+    try {
+      const response = await fetch('https://localhost:7267/auth/validate_token', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+      } else {
+        console.log('Token validation failed:', response.status)
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
     }
+  }
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken')
+      if (token) {
+        setToken(token)
+        fetchUserData(token)
+      }
+    }
+
+    checkAuth()
   }, [])
 
-  const login = async (username: string, password: string) => {
-    // Simulación de una API de login
-    const response = await fetch('https://tuapi.com/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-    const data = await response.json()
-    if (data.token) {
-      localStorage.setItem('authToken', data.token)
-      setToken(data.token)
-      setUser({ username })
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch('https://localhost:7267/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+
+        if (data.token && data.user) {
+          localStorage.setItem('authToken', data.token)
+          setUser(data.user)
+          setToken(data.token)
+        } else {
+          console.error('Login failed: Invalid response data')
+        }
+      } else {
+        console.error('Login failed:', response.status)
+      }
+    } catch (error) {
+      console.error('Login failed:', error)
     }
   }
 
   const logout = () => {
     localStorage.removeItem('authToken')
     setToken(null)
-    setUser([])
+    setUser(null)
   }
 
   return (
-        <AuthContext.Provider
-          value={{
-            user,
-            token,
-            login,
-            logout
-          }}
-        >
-            {children}
-        </AuthContext.Provider>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
 }
