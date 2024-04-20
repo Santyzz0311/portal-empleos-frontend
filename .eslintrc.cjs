@@ -18,7 +18,8 @@ module.exports = {
     'plugin:react/recommended' // Usa las recomendaciones de eslint-plugin-react
   ],
   rules: {
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off'
   },
   env: {
     es6: true,

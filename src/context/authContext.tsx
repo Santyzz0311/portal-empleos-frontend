@@ -7,35 +7,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
-  const fetchUserData = async (token: string): Promise<void> => {
-    try {
-      const response = await fetch('https://localhost:7267/auth/validate_token', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.user)
-      } else {
-        console.log('Token validation failed:', response.status)
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error)
-    }
-  }
+  // const fetchUserData = async (token: string): Promise<void> => {
+  //   try {
+  //     const response = await fetch('https://localhost:7267/auth/validate_token', {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     })
+  //     if (response.ok) {
+  //       const data = await response.json()
+  //       setUser(data.user)
+  //     } else {
+  //       console.log('Token validation failed:', response.status)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error)
+  //   }
+  // }
 
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('authToken')
-      if (token) {
-        setToken(token)
-        fetchUserData(token)
-      }
-    }
+  // useEffect(() => {
+  //   const checkAuth = () => {
+  //     const token = localStorage.getItem('authToken')
+  //     if (token) {
+  //       setToken(token)
+  //       fetchUserData(token)
+  //     }
+  //   }
 
-    checkAuth()
-  }, [])
+  //   checkAuth()
+  // }, [])
 
   const login = async (email: string, password: string) => {
     try {
