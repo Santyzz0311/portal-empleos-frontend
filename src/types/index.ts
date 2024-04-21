@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { Dispatch, ReactNode, SetStateAction } from 'react'
 
 export interface User {
   id: number;
@@ -8,10 +8,12 @@ export interface User {
 }
 
 export interface AuthContextType {
-  user: User | null;
-  token: string | null;
+  user: User;
+  token: string;
   login: (username: string, password: string) => void;
   logout: () => void;
+  activeTab: string;
+  setActiveTab: Dispatch<SetStateAction<string>>
 }
 
 export interface AuthProviderProps {
@@ -53,6 +55,10 @@ export interface Job {
   title: string;
   description: string;
   location: string;
+  creatorUserName?: string;
+  creatorEmail?: string;
+  categoryName?: string;
+  hasApplied?: boolean;
 }
 
 export interface NavItemProps {
@@ -68,4 +74,44 @@ export interface Applies {
   jobLocation: string;
   jobCreatorName: string;
   jobCreatorEmail: string;
+}
+
+export interface CreatedJobs {
+  id: number
+  title: string
+  description: string
+  location: string
+  creatorUserName: string
+  creatorEmail: string
+  categoryName: string
+}
+
+export interface Applicant {
+  id?: number;
+  applicationId: number;
+  userId: number;
+  userName: string;
+  userEmail: string;
+  applyDate: Date;
+  description: string;
+}
+
+export interface JobPostData {
+  title: string;
+  description: string;
+  location: string;
+  userId: number;
+  categoryId: number;
+}
+
+export interface ApplicationPostData {
+  description: string;
+  userId: number;
+  jobId: number;
+}
+
+export interface JobPostErrors extends Partial<Record<keyof JobPostData, boolean>> { }
+
+export interface ErrorItemProps {
+  titleText: string
 }
