@@ -20,10 +20,10 @@ const PostulationCard: React.FC<PostulationCardProps> = ({
       </div>
       <div className="px-6 py-4">
         <p className="text-gray-600 text-sm">{jobLocation}</p>
-        <p className="text-gray-600 text-sm">Applied on: {new Date(appliedOn).toLocaleDateString()}</p>
+        <p className="text-gray-600 text-sm">Postulacion hecha: {new Date(appliedOn).toLocaleDateString()}</p>
       </div>
       <div className="px-6 py-4">
-        <p className="text-gray-600 text-sm">Posted by: {jobCreatorName} ({jobCreatorEmail})</p>
+        <p className="text-gray-600 text-sm">Posteado por: {jobCreatorName} ({jobCreatorEmail})</p>
       </div>
     </div>
   )

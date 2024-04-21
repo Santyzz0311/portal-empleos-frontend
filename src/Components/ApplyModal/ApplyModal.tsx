@@ -1,13 +1,26 @@
-import { useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import { ApplyModalProps } from '../../types'
+import { AuthContext } from '../../context/authContext'
+import { postApplication } from '../../services/applicants'
 
-const ApplyModal: React.FC<ApplyModalProps> = ({ idJob, jobTitle, jobDescription, userName, setModal }) => {
+const ApplyModal: React.FC<ApplyModalProps> = ({ idJob, jobTitle, jobDescription, setModal }) => {
+  const { user } = useContext(AuthContext)!
   const [applicationReason, setApplicationReason] = useState<string>('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    // Aquí lógica para enviar aplicación
-    console.log(`Applying to job ${idJob} by ${userName} for reason: ${applicationReason}`)
+    const data = {
+      jobId: idJob,
+      userId: user.id,
+      description: applicationReason
+    }
+
+    postApplication({ body: data })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(e => console.error(e))
+    setModal(false)
   }
 
   return (
@@ -15,7 +28,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ idJob, jobTitle, jobDescription
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className='flex justify-between'>
           <h3 className="text-lg leading-6 font-medium text-gray-900">Aplicar a {jobTitle}</h3>
-          <span className='inline-block font-bold' onClick={() => setModal(false)}>X</span>
+          <span className='inline-block font-bold cursor-pointer selection:bg-transparent' onClick={() => setModal(false)}>X</span>
         </div>
         <p className="text-sm text-gray-500">{jobDescription}</p>
         <form onSubmit={handleSubmit}>
@@ -26,7 +39,6 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ idJob, jobTitle, jobDescription
             onChange={e => setApplicationReason(e.target.value)}
           />
           <button
-            type="submit"
             className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Enviar Aplicación

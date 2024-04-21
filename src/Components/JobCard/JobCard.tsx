@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ApplyModal from '../ApplyModal'
 import { JobCardProps } from '../../types'
+import StyledButton from '../StyledButton'
 
 const JobCard: React.FC<JobCardProps> = ({
   id: idJob,
@@ -31,24 +32,24 @@ const JobCard: React.FC<JobCardProps> = ({
         <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">{creatorEmail}</span>
       </div>
       <footer className="px-6 pt-4 pb-2">
-        <button
-          className='text-center w-full p-3 bg-blue-500 rounded-md text-white disabled:bg-blue-300 disabled:text-black'
-          onClick={() => setModal(true)}
+        <StyledButton
+          onClick={() =>
+            setModal(true)
+          }
           disabled={hasApplied}
-        >
-          {hasApplied ? 'Usted ya aplicó a este trabajo' : 'Aplicar'}
-        </button>
-            {
-              modal && (
-                <ApplyModal
-                  idJob={idJob}
-                  jobTitle={title}
-                  jobDescription={description}
-                  userName={creatorUserName}
-                  setModal={setModal}
-                />
-              )
-            }
+          text={hasApplied ? 'Usted ya aplicó a este trabajo' : 'Aplicar'}
+        />
+        {
+          modal && (
+            <ApplyModal
+              idJob={idJob}
+              jobTitle={title}
+              jobDescription={description}
+              userName={creatorUserName}
+              setModal={setModal}
+            />
+          )
+        }
       </footer>
     </div>
   )

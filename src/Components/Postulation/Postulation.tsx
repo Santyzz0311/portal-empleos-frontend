@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../../context/authContext'
 import PostulationCard from '../PostulationCard'
 import { Applies } from '../../types'
+import OptionsBar from '../OptionsBar'
 
 const Postulation: React.FC = () => {
   const { user } = useContext(AuthContext)!
@@ -28,19 +29,19 @@ const Postulation: React.FC = () => {
   }, [user])
 
   return (
-    <main>
-      <div className="bg-gray-800 text-white px-8 flex items-center">
-        <div className='my-2 flex items-center gap-x-3'>
-          <h1 className="text-xl font-bold">Mis Postulaciones:</h1>
+    <>
+      <OptionsBar>
+        <div className='flex items-center gap-x-3'>
+          <span className="text-xl font-bold inline-block">Mis Postulaciones:</span>
           <span className='font-bold inline-block text-lg'>{postulations.length}</span>
         </div>
-      </div>
+      </OptionsBar>
       <div className="grid grid-cols-4 gap-4 p-4">
         {postulations.map(postulation => (
           <PostulationCard key={postulation.jobId} {...postulation} />
         ))}
       </div>
-    </main>
+    </>
   )
 }
 
