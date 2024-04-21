@@ -4,8 +4,13 @@ import { AuthContextType, AuthProviderProps, User } from '../types'
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<User | undefined>()
+  const [token, setToken] = useState<string>('')
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return user?.roleName.toLowerCase() === 'postulante'
+      ? 'apply'
+      : 'ownJobs'
+  })
 
   // const fetchUserData = async (token: string): Promise<void> => {
   //   try {
@@ -67,8 +72,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('authToken')
-    setToken(null)
-    setUser(null)
+    setToken('')
+    setUser(undefined)
   }
 
   return (
@@ -77,7 +82,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         token,
         login,
-        logout
+        logout,
+        activeTab,
+        setActiveTab
       }}
     >
       {children}
