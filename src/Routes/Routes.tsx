@@ -10,8 +10,8 @@ export default function AppRoutes () {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={token ? <Navigate to="/home" replace /> : <Login />} />
-        <Route path="/home" element={!token ? <Navigate to="/login" replace /> : <Home />} />
+        <Route path="/" element={token ? <Navigate to="/home" replace /> : <Login />} />
+        <Route path="/home" element={!token ? <Navigate to="/" replace /> : <Home />} />
       </Routes>
     </Router>
   )
